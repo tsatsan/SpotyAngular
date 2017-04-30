@@ -9,101 +9,60 @@
 </head>
 
 <body>
- <p>{{ 3+4 }}</p>
-    <div class="container" ng-controller='spotyController'>
-        <div class="col-md-6 col-md-offset-3">
-            <form role="form">
-                <div class="row">
-                    <h1 class="text-center">Search Title</h1>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input ng-model='artistQuery' class="form-control" type="text"  placeholder="Search" required>
-                            <span class="input-group-btn">
-                            <button ng-click='artistSearch()' class="btn btn-success" type="submit"><i class="glyphicon glyphicon-search" aria-hidden="true"></i> <span>Search</span></button>
+<div class='mycontainer'>
+    <div class="container">
+        <div class='row'>
+            <div class="col-md-6 col-md-offset-3" ng-controller='searchController'>
+                <form role="form">
+                    <div class="row">
+                        <h1 class="text-center">Search Title</h1>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <p>{{ 3+4 }}</p>
+                                <input ng-model='artistQuery' class="form-control" type="text" placeholder="Search" required>
+                                <div class="input-group-btn">
+                                    <button ng-click='artistSearch()' class="btn btn-success" type="submit"><i class="glyphicon glyphicon-search" aria-hidden="true"></i> <span>Search</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <select ng-model='artist_selected' ng-change='artistSelection()' class="form-control">
-                            <option ng-repeat='artist in artists' value="{{artist.id}}">{{artist.name}}</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                    <select ng-model='album_selected' ng-change='albumSelection()'  class="form-control">
-                            <option   ng-repeat='album in albums' value='{{album.id}}'>{{album.name}}</option>
-                        </select>
-                    <ul class="list-group">
-                      <li class="list-group-item" ng-repeat='track in tracks'><a href='{{track.preview_url}}' >{{track.name}}</a></li>
-                    </ul>
-                    
-                    </div>
+                </form>
+            </div>
+            <div class="col-md-12" ng-controller="artistsController">
+                <div class='jumbotron'>
+                    <h1>Artists</h1>
+                    <select ng-model='artist_selected' ng-change='artistSelection()' class="form-control">
+                        <option ng-repeat='artist in artists' value="{{artist.id}}">{{artist.name}}</option>
+                    </select>
                 </div>
-            </form>
+            </div>
+            <div class='col-md-12' ng-controller='albumsController'>
+                <div class='jumbotron'>
+                    <h1>Albums</h1>
+                    <select ng-model='album_selected' ng-change='albumSelection()' class="form-control">
+                        <option ng-repeat='album in albums' value='{{album.id}}'>{{album.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class='col-md-12'>
+                <div class='jumbotron'>
+                    <h1>Songs</h1>
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat='track in tracks'><a href='{{track.preview_url}}'>{{track.name}}</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div>
-            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-            <script type='text/javascript'>
-            angular.module('spotyApp', [])
-                .controller('spotyController', function($scope, spotyService) {
-                    
-                    $scope.artistQuery = 'the beatles'
+    </div>
+  </div>
 
-                    $scope.artistSearch = function(){
-                      var query = $scope.artistQuery
-                      console.log(query)
-                            spotyService.searchArtist(query)
-                            .then(function(response) {
-                                $scope.artists = response.data.artists.items
-                            })
-                    }
-
-                    $scope.artistSelection = function() {
-                     var idArtist = $scope.artist_selected
-                      spotyService.artistSelection(idArtist)
-                      .then(function(response) {
-                        $scope.albums = response.data.items
-            
-                      })
-                            
-                
-                  }
-
-                 $scope.albumSelection = function(){
-                var idAlbum = $scope.album_selected
-                console.log(idAlbum)
-                  spotyService.albumSelection(idAlbum)
-                    .then(function(response) {
-                     $scope.tracks = response.data.items
-                      })
-
-                  }
-
-                })
-
-                  .factory('spotyService', function($http) {
-                    
-                    function artistSearch(query) {
-                        var urlArtistSearch = 'https://api.spotify.com/v1/search?type=artist&query='+ query
-                        return $http.get(urlArtistSearch)
-                    }
-                    function artistSelection(idArtist){
-                      var urlAlbumsArtist = 'https://api.spotify.com/v1/artists/' + idArtist + '/albums'
-                      return $http.get(urlAlbumsArtist)
-                    }
-                    function albumSelection(idAlbum){
-                      var urlAlbumSelected = 'https://api.spotify.com/v1/albums/' + idAlbum + '/tracks'
-                      return $http.get(urlAlbumSelected)
-
-                    } 
-
-                    return {
-                      searchArtist: artistSearch,
-                      artistSelection: artistSelection,
-                      albumSelection: albumSelection
-                    }
-
-                  })
-            </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/controllers/searchController.js"></script>
+    <script type="text/javascript" src="js/controllers/artistsController.js"></script>
+    <script type="text/javascript" src="js/controllers/albumsController.js"></script>
+    <script type="text/javascript" src="js/services/spotyService.js"></script>
 </body>
 
 </html>
